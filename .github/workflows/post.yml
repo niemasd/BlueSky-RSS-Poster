@@ -1,0 +1,31 @@
+name: Post next BlueSky post from RSS feeds
+on:
+  schedule:
+    - cron: "*/5 * * * *" # run every 5 minutes
+jobs:
+  post_bluesky:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Git repository
+      uses: actions/checkout@v2
+    - name: Generate next post
+      id: generate
+      run: |
+        post_text="$(python3 next_post.py feeds.txt posts.txt | tr -d '\n')" && \
+        echo "post_text=$post_text" >> $GITHUB_OUTPUT
+    - name: Add to posts.txt
+      if: ${{ steps.generate.outputs.post_text != '' }}
+      run: |
+        echo "${{ steps.generate.outputs.post_text }}" >> posts.txt && \
+        git config user.name 'GitHub Actions' && \
+        git config user.email 'action@github.com' && \
+        git add posts.txt && \
+        git commit -m "Added new post" && \
+        git push
+    - name: Post to BlueSky
+      if: ${{ steps.generate.outputs.post_text != '' }}
+      uses: cbrgm/bluesky-github-action@v1
+      with:
+        handle: ${{ secrets.BLUESKY_HANDLE }}
+        password: ${{ secrets.BLUESKY_PASSWORD }}
+        text: ${{ steps.generate.outputs.post_text }}
