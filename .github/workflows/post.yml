@@ -1,7 +1,7 @@
 name: Post next BlueSky post from RSS feeds
 on:
   schedule:
-    - cron: "*/1 * * * *" # run every 5 minutes
+    - cron: "*/1 * * * *" # run every minute
   workflow_dispatch:
 jobs:
   post_bluesky:
