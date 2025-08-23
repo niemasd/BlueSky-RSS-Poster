@@ -88,6 +88,6 @@ if __name__ == "__main__":
             for s in [curr_link, curr_pubDate, channel_title, curr_title]:
                 if s != '':
                     curr_post += (s + '\n')
-            curr_post = curr_post.strip()[:CHAR_LIMIT].strip().replace('\n', ' | ')
+            curr_post = curr_post.strip()[:CHAR_LIMIT].strip()
             if curr_post not in old_posts:
                 print(curr_post); exit()
