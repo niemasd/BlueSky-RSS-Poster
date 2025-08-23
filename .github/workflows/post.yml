@@ -12,8 +12,12 @@ jobs:
     - name: Generate next post
       id: generate
       run: |
-        post_text="$(python3 next_post.py feeds.txt posts.txt | tr -d '\n')" && \
-        echo "post_text=$post_text" >> $GITHUB_OUTPUT
+        post_text="$(python3 next_post.py feeds.txt posts.txt)"
+        {
+          echo "post_text<<EOF"
+          echo "$post_text"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
     - name: Add to posts.txt
       if: ${{ steps.generate.outputs.post_text != '' }}
       run: |
