@@ -19,9 +19,7 @@ jobs:
         echo "${{ steps.generate.outputs.post_text }}" >> posts.txt && \
         git config user.name 'GitHub Actions' && \
         git config user.email 'action@github.com' && \
-        git add posts.txt && \
-        git commit -m "Added new post" && \
-        git push
+        git diff --quiet && echo "No changes" || (git add posts.txt && git commit -m "Added new post" && git push)
     - name: Post to BlueSky
       if: ${{ steps.generate.outputs.post_text != '' }}
       uses: cbrgm/bluesky-github-action@v1
